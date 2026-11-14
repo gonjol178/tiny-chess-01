@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/tiny-chess-01/gonjol178/tiny-chess-01/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
 [![reward](https://make.fun/badge/tiny-chess-01/gonjol178/tiny-chess-01/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
 
-A deterministic chess engine packed into 3,799 bytes of Python: negamax alpha-beta search with quiescence, a transposition table, null-move pruning and a genuine PeSTO tapered piece-square evaluation, with SEE-ordered captures and killer moves, playing each move at a fixed 75,000-node cap through the make.fun trial env.
+A deterministic chess engine packed into 3,334 bytes of Python: negamax alpha-beta search with quiescence, a transposition table, null-move pruning and a tapered piece-square evaluation, playing each move at a fixed 75,000-node cap through the make.fun trial env.
 
 ## Run it
 
