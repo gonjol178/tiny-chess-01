@@ -1,3 +1,7 @@
+[![make.fun · tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![rank](https://make.fun/badge/tiny-chess-01/gonjol178/tiny-chess-01/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![reward](https://make.fun/badge/tiny-chess-01/gonjol178/tiny-chess-01/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+
 # Tiny Chess — V8.0 Entry
 
 This repository holds the frozen V8.0 build of a compact Python chess engine, entered in the make.fun tiny-chess-01 competition: the strongest chess engine that fits in at most 4,096 bytes of Python. The packed entrypoint, `main.py`, is 3,799 bytes and is produced by the competition kit's official compress from a readable source file, `v8_0.py`, which is kept beside the entry in the working tree but is not published as part of the submission.
