@@ -4,7 +4,7 @@
 
 # Tiny Chess — V8.0 Entry
 
-This repository holds the frozen V8.0 build of a compact Python chess engine, entered in the make.fun tiny-chess-01 competition: the strongest chess engine that fits in at most 4,096 bytes of Python. The packed entrypoint, `main.py`, is 3,799 bytes and is produced by the competition kit's official compress from a readable source file, `v8_0.py`, which is kept beside the entry in the working tree but is not published as part of the submission.
+The frozen V8.0 build of a compact Python chess engine, entered in make.fun's tiny-chess-01: the strongest engine in at most 4,096 bytes of Python. The entrypoint, `main.py`, is 3,799 bytes, produced by the kit's official compress from the readable source `v8_0.py` (kept in the working tree, unpublished).
 
 ## Design
 
@@ -20,7 +20,7 @@ Every move is chosen under a fixed cap of 75,000 search nodes, with no wall-cloc
 
 ## Verification
 
-Under the kit's practice protocol, this frozen build scored a mean of 1599 across three trials, against the sunfish baseline's mean of 1325. The build was frozen after an identity check confirmed that repeated benchmark runs reproduce the same trial scores, the same game transcripts, and the same node counts. The packed entrypoint was also reproduced byte-for-byte from the readable source using the kit's official compress and verified by hash, so the 3,799 bytes that compete are exactly the bytes that were benchmarked.
+Under the kit's practice protocol, this build scored a mean of 1599 across three trials, against the sunfish baseline's 1325. An identity check confirmed repeated runs reproduce the same scores, game transcripts, and node counts, and the entrypoint was reproduced byte-for-byte from the source with the kit's official compress and verified by hash — the 3,799 bytes that compete are exactly the bytes benchmarked.
 
 ## Layout
 
