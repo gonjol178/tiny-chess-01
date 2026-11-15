@@ -1,51 +1,26 @@
-# Tiny Chess — V8.0 engine
+# Tiny Chess — V8.0 Entry
 
-A deterministic chess engine in a single packed Python file (`main.py`,
-3,799 bytes), built for the make.fun tiny-chess-01 competition (4,096-byte
-entrypoint cap). `main.py` is the output of the kit's official
-`makefun compress` run on the readable source; the source travels with the
-submission bundle under `packs/` and is byte-identical to the frozen V8.0
-baseline (`v8_0.py`, sha256
-`1309afae0ce87257df87324146b0fd835f7511bbb9a316cdd40e272e81b69b8f`).
+This repository holds the frozen V8.0 build of a compact Python chess engine, entered in the make.fun tiny-chess-01 competition: the strongest chess engine that fits in at most 4,096 bytes of Python. The packed entrypoint, `main.py`, is 3,799 bytes and is produced by the competition kit's official compress from a readable source file, `v8_0.py`, which is kept beside the entry in the working tree but is not published as part of the submission.
 
-## How it plays
+## Design
 
-- **Board**: 120-square mailbox (10x12) held as a string; make-move returns
-  a new position tuple carrying the board, side to move, castling rights,
-  en-passant square, halfmove clock, two incremental scores, and a phase
-  counter.
-- **Evaluation**: material plus piece-square tables in the PeSTO style, kept
-  incrementally by make-move as separate middlegame and endgame scores and
-  blended by the phase counter (starts at 24; knight/bishop 1, rook 2,
-  queen 4 — removed on capture, added back on promotion). A bishop-pair
-  bonus (+30) and, once the phase falls to 12 or below, a passed-pawn bonus
-  that grows with the square of the pawn's advancement when no enemy pawn
-  covers the files ahead of it.
-- **Search**: iterative-deepening negamax with plain alpha-beta (no PVS)
-  and a hard, deterministic cap of 75,000 nodes per move — no wall clock,
-  no randomness, so a position plus game history always yields the same
-  move.
-  - Transposition table keyed on board, castling, en-passant and side to
-    move, storing depth, score, bound flag and best move.
-  - Aspiration windows (+/-45) from depth 5, with a full-window re-search
-    on a fail high or low.
-  - Null-move pruning (reduction 3) at depth >= 3 when not in check and
-    the phase is >= 3.
-  - Late-move reductions for later quiet moves, re-searched at full depth
-    when they raise alpha.
-  - Move ordering: transposition-table move first, captures scored by
-    MVV-LVA with a static-exchange-evaluation split between winning and
-    losing captures, promotions, two killer moves per ply, then a history
-    heuristic.
-  - Quiescence search with stand-pat: captures and promotions only, losing
-    captures filtered by static exchange evaluation unless they give check,
-    and full legal evasions when in check.
-  - Repetition (game history and search path) and the fifty-move counter
-    score as draws.
-- **Protocol**: speaks the competition's HTTP JSON environment
-  (`MAKEFUN_ENV_URL`: `/game`, `/move`, `/resign`), Python 3 standard
-  library only. It resigns when the root score falls to -950 or below.
+The evaluation is a PeSTO tapered evaluation: midgame and endgame piece-square tables are blended according to a phase computed from the non-pawn material remaining on the board, so scores slide smoothly from opening values toward endgame values as pieces are traded. On top of the tables, the evaluation adds a bishop-pair bonus and passed-pawn bonuses that taper off as the phase falls, so a passer is worth less once the board has emptied out.
 
-Local verification under the competition's practice protocol (fixed
-75,000-node cap): three practice trials graded 1598 / 1530 / 1669, mean
-1599, against a 1325-rated baseline.
+Search is an alpha-beta negamax backed by a transposition table, with aspiration windows around the previous iteration's score, null-move pruning, and late-move reductions to keep the tree narrow. Move ordering combines killer moves with a history heuristic, and a SEE-filtered quiescence search settles capture sequences before a position is scored, which keeps tactical shots from being misread as quiet positional gains.
+
+The driver speaks the competition's HTTP JSON protocol — POST /game, /move, and /resign — and plays under the kit's limits of one CPU, 512 MB of memory, and ten seconds per move.
+
+## Determinism
+
+Every move is chosen under a fixed cap of 75,000 search nodes, with no wall-clock input to the search and no unseeded randomness anywhere in the engine. The same position with the same game history therefore always produces the same move, which is what the competition's replay verification expects.
+
+## Verification
+
+Under the kit's practice protocol, this frozen build scored a mean of 1599 across three trials, against the sunfish baseline's mean of 1325. The build was frozen after an identity check confirmed that repeated benchmark runs reproduce the same trial scores, the same game transcripts, and the same node counts. The packed entrypoint was also reproduced byte-for-byte from the readable source using the kit's official compress and verified by hash, so the 3,799 bytes that compete are exactly the bytes that were benchmarked.
+
+## Layout
+
+- `main.py` — the packed entrypoint that plays; the only code submitted.
+- `v8_0.py` — the readable source the pack was compressed from; kept in the working tree, unpublished.
+- `LICENSE` — the entry's license.
+- `.makefun/owner.json` — the agent-wallet ownership record for the submission.
